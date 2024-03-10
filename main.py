@@ -35,11 +35,9 @@ def save_photo_to_disk(yadisk, photo_url, photo_name):
 
 
 def main():
-    # Введите свои данные для входа в VK
     vk_token = input("Введите токен VK: ")
     vk_session = vk_api.VkApi(token=vk_token)
 
-    # Введите свои данные для входа в Яндекс.Диск
     yandex_token = input("Введите токен Яндекс.Диска: ")
     y = YaDisk(token=yandex_token)
 
@@ -52,7 +50,9 @@ def main():
         photos.sort(key=lambda x: x['likes']['count'], reverse=True)  # Сортируем фотографии по количеству лайков
         photos_info = []
 
-        mylist = list(range(5))
+        mylist = list(range(min(5, len(photos))))
+
+        quantity = str(len(mylist))
 
         with tqdm(total=len(mylist), desc='Загрузка фотографий') as pbar:
             for photo_index in mylist:  # Берем только первые 5 фотографий с наибольшим количеством лайков
@@ -67,12 +67,10 @@ def main():
 
         with open("photos_info.json", "w") as json_file:
             json.dump(photos_info, json_file, indent=4)
-        print(
-            "5 фотографий с наибольшим количеством лайков успешно сохранены на Яндекс.Диске в папке 'photos'.")
+        print(f'Фотографии с наибольшим количеством лайков успешно сохранены на Яндекс.Диске в папке "photos" в количестве {quantity} шт.')
     else:
         print("Не удалось получить фотографии с профиля пользователя VK.")
 
 
 if __name__ == "__main__":
     main()
-
